@@ -1,5 +1,5 @@
 ---
-title: "FinalProject"
+title: "Final R project"
 author: "Christy Destin"
 format: html
 editor: visual
@@ -9,7 +9,9 @@ editor: visual
 
 Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
 
-## Running Code:
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
 # Load packages
@@ -29,37 +31,55 @@ The blood_storage files contains survey data on patients that are diabetic. It c
 In this Quarto report, I conducted an analysis with the objective of exploring the different variables associated with blood_storage.
 
 ```{r read-in-data, message = FALSE, warning= FALSE}
-blood_storage<-load(file="data folder/blood_storage.rda")
-``` 
+blood_storage <- load(here::here("data/blood_storage.rda"))
+```
 
-```{r clean-data, message = FALSE, warning = False}
+```{r clean-data, message = FALSE, warning = FALSE}
 completedata<-na.omit(blood_storage)
-
 ```
+
 ```{r}
-
-
-mod_Tvol<- lm(Age ~ FamHx, data = blood_storage)
-tidy_Tvol <- tidy(mod_Tvol, conf.int = TRUE)
-
+Age<- c (72.1,73.6,67.5,65.8,63.2,65.4,67.1)
+std_dev <- sd(Age)
+print(std_dev)
 ```
+
 ```{r}
+Lable <- 
 tbl_summary(
 	blood_storage,
 	by = Age,
 	include = c(FamHx, TVol, PVol,
 							T.Stage, bGS, PreopPSA))
-```
 
+print(Lable)
+```
 
 ```{r}
-label = list(
-		race_eth_cat ~ "Race/ethnicity",
-		eyesight_cat ~ "Eyesight",
-		glasses ~ "Wears glasses",
-		age_bir ~ "Age at first birth"
+
+tbl_uvregression(
+	blood_storage,
+	y = AA,
+	include = c(Units, PVol,
+							T.Stage, bGS, PreopPSA),
+	method = glm,
+	method.args = list(family = binomial()),
+	exponentiate = TRUE)
+	
 ```
+
+```{r}
+Lable: tbl-one
+tbl-cap: "This the age of participants"
+knitr::kable(blood_storage)
+
+```
+
 ```{r}
 hist(blood_storage$Age,main=" Age of participants")
-``` 
+```
 
+```{r}
+gtsummary::inline_text()
+
+```
