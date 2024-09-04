@@ -1,0 +1,92 @@
+---
+title: "Use this qmd"
+format: html
+editor: visual
+---
+
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(broom)
+library(dplyr)
+library(esquisse)
+library(gtsummary)
+library(ggplot2)
+library(here)
+```
+
+# Introduction to data
+
+The blood_storage files contains survey data on patients that are diabetic. It contains information about their ages, recurrence frequency, and blood sugar levels. People with diabetes using insulin therapy should regularly monitor their blood glucose levels. This is especially important to people using basal insulin, who should have a meter and glucose strips available in case of hypoglycemia
+
+In this Quarto report, I conducted an analysis with the objective of exploring the different variables associated with blood_storage.
+
+# Loading data
+
+```{r read-in-data, useBytes = TRUE, warning= FALSE}
+file_path <- here::here("data/blood_storage.rda")
+load("C:/Users/Chris/OneDrive/Desktop/Finalproject/data/blood_storage.rda")
+print(file_path)
+```
+
+# Clean data
+
+```{r clean-data, message = FALSE, warning = FALSE}
+completedata<-na.omit(blood_storage)
+```
+
+## Standard deviation of age
+
+```{r}
+Age<- c (72.1,73.6,67.5,65.8,63.2,65.4,67.1)
+std_dev <- sd(Age)
+print(std_dev)
+```
+
+## This step allows me to do run tbl_summary to find descriptive stastistics
+
+```{r}
+#| label: tbl-one
+#| tbl-cap: "This table shows descriptive statistics by T.Stage, including blood volume and other characteristics."
+
+tbl_one <- tbl_summary(
+  blood_storage,
+  by = T.Stage,  # Group by Age
+  include = c(Age,FamHx, TVol, PVol, bGS, PreopPSA)
+) %>%
+	add_overall()
+# Print the summary table
+tbl_one
+
+
+median_age <- inline_text(tbl_one, variable = "Age", column = "stat_1")
+
+
+```
+As @tbl-one shows, the overall median(IQR) age is `r median_age`.
+
+```{r}
+hist(blood_storage$Age,main=" Age of participants")
+```
+
+```{r}
+
+tbl_uvregression(
+	blood_storage,
+	y = AA,
+	include = c(Units, PVol,
+							T.Stage, bGS, PreopPSA),
+	method = glm,
+	method.args = list(family = binomial()),
+	exponentiate = TRUE)
+	
+```
+
