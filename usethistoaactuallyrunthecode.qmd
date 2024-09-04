@@ -69,13 +69,21 @@ tbl_one
 
 median_age <- inline_text(tbl_one, variable = "Age", column = "stat_1")
 
+median_TVol <- inline_text(tbl_one, variable = "TVol", column =
+"stat_1")
 
 ```
 
 As @tbl-one shows, the overall median(IQR) age is `r median_age`.
 
+As @tbl-one shows, the overall median (IQR) age is `r median_TVol`
+
 ```{r}
 hist(blood_storage$Age,main=" Age of participants")
+```
+
+```{r}
+here::i_am("usethistoaactuallyrunthecode.qmd")
 ```
 
 ```{r}
