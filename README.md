@@ -1,0 +1,1 @@
+Render 'usethistoaactuallyrunthecodes.qmd'. All the code and data is within the document, and after rendering it will save as an html file. My computer rebooted because of that I had a lot of difficulties with files being safe in different files, I am including link to the different files where some of my work over the last few days have been saved and committed.
